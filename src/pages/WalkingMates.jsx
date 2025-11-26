@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Button, Card, Badge, Modal, Input, Loading, Avatar } from "../components/common";
+import {
+  Button,
+  Card,
+  Badge,
+  Modal,
+  Input,
+  Loading,
+  Avatar,
+} from "../components/common";
 import walkingMatesAPI from "../api/walkingMates";
 import routesAPI from "../api/routes";
 import styles from "./WalkingMates.module.css";
@@ -93,6 +101,10 @@ const WalkingMates = () => {
       setError("산책로를 선택해주세요");
       return;
     }
+    if (!formData.location) {
+      setError("제목을 입력해주세요");
+      return;
+    }
     if (!formData.walkingDate || !formData.walkingTime) {
       setError("날짜와 시간을 입력해주세요");
       return;
@@ -102,7 +114,9 @@ const WalkingMates = () => {
     setError("");
 
     try {
-      const walkingDate = new Date(`${formData.walkingDate}T${formData.walkingTime}`).toISOString();
+      const walkingDate = new Date(
+        `${formData.walkingDate}T${formData.walkingTime}`
+      ).toISOString();
       await walkingMatesAPI.create({
         routeId: formData.routeId,
         walkingDate,
@@ -149,7 +163,12 @@ const WalkingMates = () => {
   };
 
   const getSizeLabel = (size) => {
-    const labels = { ALL: "모든 크기", SMALL: "소형", MEDIUM: "중형", LARGE: "대형" };
+    const labels = {
+      ALL: "모든 크기",
+      SMALL: "소형",
+      MEDIUM: "중형",
+      LARGE: "대형",
+    };
     return labels[size] || size;
   };
 
@@ -168,7 +187,9 @@ const WalkingMates = () => {
         ].map((tab) => (
           <button
             key={tab.value}
-            className={`${styles.tab} ${filter === tab.value ? styles.active : ""}`}
+            className={`${styles.tab} ${
+              filter === tab.value ? styles.active : ""
+            }`}
             onClick={() => setFilter(tab.value)}
           >
             {tab.label}
@@ -187,7 +208,10 @@ const WalkingMates = () => {
             >
               <div className={styles.mateHeader}>
                 <div className={styles.mateBadges}>
-                  <Badge variant={mate.status === "OPEN" ? "success" : "default"} size="sm">
+                  <Badge
+                    variant={mate.status === "OPEN" ? "success" : "default"}
+                    size="sm"
+                  >
                     {mate.status === "OPEN" ? "모집중" : "마감"}
                   </Badge>
                   <Badge variant="primary" size="sm">
@@ -208,7 +232,11 @@ const WalkingMates = () => {
                 <p className={styles.mateDescription}>{mate.description}</p>
               )}
               <div className={styles.mateHost}>
-                <Avatar src={mate.hostUser?.profileImage} name={mate.hostUser?.name} size="xs" />
+                <Avatar
+                  src={mate.hostUser?.profileImage}
+                  name={mate.hostUser?.name}
+                  size="xs"
+                />
                 <span>{mate.hostUser?.name}</span>
               </div>
             </Card>
@@ -218,7 +246,11 @@ const WalkingMates = () => {
             <span className={styles.emptyIcon}>🐾</span>
             <p>모집 중인 산책이 없어요</p>
             {isAuthenticated && (
-              <Button variant="secondary" size="sm" onClick={handleOpenCreateModal}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleOpenCreateModal}
+              >
                 산책 모집하기
               </Button>
             )}
@@ -229,7 +261,15 @@ const WalkingMates = () => {
       {/* FAB */}
       {isAuthenticated && (
         <button className={styles.fab} onClick={handleOpenCreateModal}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
@@ -248,7 +288,7 @@ const WalkingMates = () => {
 
           {/* 산책로 선택 */}
           <div className={styles.routeSection}>
-            <label className={styles.routeLabel}>산책로 선택 *</label>
+            <label className={styles.routeLabel}>산책로 선택</label>
             {routesLoading ? (
               <div className={styles.routeLoading}>산책로 불러오는 중...</div>
             ) : routes.length > 0 ? (
@@ -256,7 +296,9 @@ const WalkingMates = () => {
                 {routes.map((route) => (
                   <div
                     key={route.id}
-                    className={`${styles.routeItem} ${formData.routeId === route.id ? styles.selected : ""}`}
+                    className={`${styles.routeItem} ${
+                      formData.routeId === route.id ? styles.selected : ""
+                    }`}
                     onClick={() => handleRouteSelect(route)}
                   >
                     <div className={styles.routeIcon}>🗺️</div>
@@ -277,17 +319,31 @@ const WalkingMates = () => {
             ) : (
               <div className={styles.noRoutes}>
                 <p>등록된 산책로가 없어요</p>
-                <Button variant="outline" size="sm" onClick={() => navigate("/routes")}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/routes")}
+                >
                   산책로 보기
                 </Button>
               </div>
             )}
           </div>
 
+          <Input
+            label="제목"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="예: 한강공원 산책 같이해요"
+            required
+            fullWidth
+          />
+
           <div className={styles.formRow}>
             <Input
               type="date"
-              label="날짜 *"
+              label="날짜"
               name="walkingDate"
               value={formData.walkingDate}
               onChange={handleChange}
@@ -296,7 +352,7 @@ const WalkingMates = () => {
             />
             <Input
               type="time"
-              label="시간 *"
+              label="시간"
               name="walkingTime"
               value={formData.walkingTime}
               onChange={handleChange}
@@ -308,7 +364,11 @@ const WalkingMates = () => {
           <div className={styles.formRow}>
             <div className={styles.selectWrapper}>
               <label>예상 시간</label>
-              <select name="duration" value={formData.duration} onChange={handleChange}>
+              <select
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+              >
                 <option value="30">30분</option>
                 <option value="60">1시간</option>
                 <option value="90">1시간 30분</option>
@@ -317,9 +377,15 @@ const WalkingMates = () => {
             </div>
             <div className={styles.selectWrapper}>
               <label>최대 인원</label>
-              <select name="maxParticipants" value={formData.maxParticipants} onChange={handleChange}>
+              <select
+                name="maxParticipants"
+                value={formData.maxParticipants}
+                onChange={handleChange}
+              >
                 {[2, 3, 4, 5, 6, 7, 8].map((n) => (
-                  <option key={n} value={n}>{n}명</option>
+                  <option key={n} value={n}>
+                    {n}명
+                  </option>
                 ))}
               </select>
             </div>
@@ -327,7 +393,11 @@ const WalkingMates = () => {
 
           <div className={styles.selectWrapper}>
             <label>반려동물 크기</label>
-            <select name="petSizeFilter" value={formData.petSizeFilter} onChange={handleChange}>
+            <select
+              name="petSizeFilter"
+              value={formData.petSizeFilter}
+              onChange={handleChange}
+            >
               <option value="ALL">모든 크기</option>
               <option value="SMALL">소형</option>
               <option value="MEDIUM">중형</option>
@@ -346,7 +416,12 @@ const WalkingMates = () => {
             />
           </div>
 
-          <Button type="submit" fullWidth loading={submitting} disabled={!formData.routeId}>
+          <Button
+            type="submit"
+            fullWidth
+            loading={submitting}
+            disabled={!formData.routeId}
+          >
             모집하기
           </Button>
         </form>
