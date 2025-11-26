@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Button, Input } from "../components/common";
-import logo from "../assets/logo.png";
 import styles from "./Login.module.css";
 
 const Login = () => {
@@ -39,7 +38,6 @@ const Login = () => {
   return (
     <div className={styles.page}>
       <div className={styles.brand}>
-        <img src={logo} alt="Petmily" className={styles.logo} />
         <h1 className={styles.title}>Petmily</h1>
         <p className={styles.subtitle}>반려동물과 함께하는 행복한 산책</p>
       </div>
@@ -75,8 +73,7 @@ const Login = () => {
 
       <div className={styles.footer}>
         <p>
-          아직 계정이 없으신가요?{" "}
-          <Link to="/register">회원가입</Link>
+          아직 계정이 없으신가요? <Link to="/register">회원가입</Link>
         </p>
       </div>
     </div>
