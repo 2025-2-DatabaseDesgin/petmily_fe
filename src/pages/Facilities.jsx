@@ -53,6 +53,7 @@ const Facilities = () => {
     { value: "SHOP", label: "펫샵", icon: "🛒" },
     { value: "HOSPITAL", label: "병원", icon: "🏥" },
     { value: "PARK", label: "공원", icon: "🌳" },
+    { value: "OTHER", label: "기타", icon: "📍" },
   ];
 
   if (loading) {

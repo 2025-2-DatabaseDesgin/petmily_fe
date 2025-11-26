@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Button, Card, Badge, Modal, Loading, Avatar } from "../components/common";
+import {
+  Button,
+  Card,
+  Badge,
+  Modal,
+  Loading,
+  Avatar,
+} from "../components/common";
 import walkingMatesAPI from "../api/walkingMates";
 import petsAPI from "../api/pets";
 import styles from "./WalkingMateDetail.module.css";
@@ -40,7 +47,7 @@ const WalkingMateDetail = () => {
   const fetchMyPets = async () => {
     try {
       const response = await petsAPI.getMyPets();
-      setMyPets(response.data || []);
+      setMyPets(response.data?.pets || []);
     } catch (err) {
       console.error("반려동물 목록 로딩 실패:", err);
     }
@@ -86,6 +93,38 @@ const WalkingMateDetail = () => {
     }
   };
 
+  // 참가 승인 (호스트용)
+  const handleApprove = async (participantId) => {
+    try {
+      await walkingMatesAPI.approveParticipant(participantId);
+      fetchMate();
+    } catch (err) {
+      alert(err.message || "승인에 실패했습니다");
+    }
+  };
+
+  // 참가 거절 (호스트용)
+  const handleReject = async (participantId) => {
+    if (!confirm("참가를 거절하시겠습니까?")) return;
+    try {
+      await walkingMatesAPI.rejectParticipant(participantId);
+      fetchMate();
+    } catch (err) {
+      alert(err.message || "거절에 실패했습니다");
+    }
+  };
+
+  // 대기 취소
+  const handleCancelWaitlist = async (waitlistId) => {
+    if (!confirm("대기를 취소하시겠습니까?")) return;
+    try {
+      await walkingMatesAPI.cancelWaitlist(waitlistId);
+      fetchMate();
+    } catch (err) {
+      alert(err.message || "대기 취소에 실패했습니다");
+    }
+  };
+
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("ko-KR", {
@@ -99,7 +138,12 @@ const WalkingMateDetail = () => {
   };
 
   const getSizeLabel = (size) => {
-    const labels = { ALL: "모든 크기", SMALL: "소형", MEDIUM: "중형", LARGE: "대형" };
+    const labels = {
+      ALL: "모든 크기",
+      SMALL: "소형",
+      MEDIUM: "중형",
+      LARGE: "대형",
+    };
     return labels[size] || size;
   };
 
@@ -107,6 +151,11 @@ const WalkingMateDetail = () => {
   const isParticipant = mate?.participants?.some(
     (p) => p.user?.id === user?.id && p.status === "ACCEPTED"
   );
+  const isPending = mate?.participants?.some(
+    (p) => p.user?.id === user?.id && p.status === "PENDING"
+  );
+  const myWaitlist = mate?.waitlist?.find((w) => w.user?.id === user?.id);
+  const isInWaitlist = !!myWaitlist;
 
   if (loading) {
     return <Loading fullScreen text="불러오는 중..." />;
@@ -121,7 +170,10 @@ const WalkingMateDetail = () => {
       {/* Header Card */}
       <Card className={styles.headerCard}>
         <div className={styles.badges}>
-          <Badge variant={mate.status === "OPEN" ? "success" : "default"} size="lg">
+          <Badge
+            variant={mate.status === "OPEN" ? "success" : "default"}
+            size="lg"
+          >
             {mate.status === "OPEN" ? "모집중" : "마감"}
           </Badge>
           <Badge variant="primary" size="lg">
@@ -132,14 +184,20 @@ const WalkingMateDetail = () => {
         <p className={styles.dateTime}>📅 {formatDateTime(mate.walkingDate)}</p>
         <div className={styles.infoRow}>
           {mate.duration && <span>⏱️ {mate.duration}분</span>}
-          <span>👥 {mate.currentParticipants || 0}/{mate.maxParticipants}명</span>
+          <span>
+            👥 {mate.currentParticipants || 0}/{mate.maxParticipants}명
+          </span>
         </div>
       </Card>
 
       {/* Host Info */}
       <Card className={styles.hostCard}>
         <div className={styles.hostInfo}>
-          <Avatar src={mate.hostUser?.profileImage} name={mate.hostUser?.name} size="lg" />
+          <Avatar
+            src={mate.hostUser?.profileImage}
+            name={mate.hostUser?.name}
+            size="lg"
+          />
           <div>
             <span className={styles.hostLabel}>주최자</span>
             <span className={styles.hostName}>{mate.hostUser?.name}</span>
@@ -162,11 +220,65 @@ const WalkingMateDetail = () => {
           <div className={styles.participantList}>
             {mate.participants.map((p) => (
               <div key={p.id} className={styles.participant}>
-                <Avatar src={p.user?.profileImage} name={p.user?.name} size="sm" />
-                <span>{p.user?.name}</span>
-                <Badge variant={p.status === "ACCEPTED" ? "success" : "warning"} size="sm">
+                <Avatar
+                  src={p.user?.profileImage}
+                  name={p.user?.name}
+                  size="sm"
+                />
+                <span className={styles.participantName}>{p.user?.name}</span>
+                <Badge
+                  variant={p.status === "ACCEPTED" ? "success" : "warning"}
+                  size="sm"
+                >
                   {p.status === "ACCEPTED" ? "승인" : "대기"}
                 </Badge>
+                {isHost && p.status === "PENDING" && (
+                  <div className={styles.participantActions}>
+                    <button
+                      className={styles.approveBtn}
+                      onClick={() => handleApprove(p.id)}
+                    >
+                      승인
+                    </button>
+                    <button
+                      className={styles.rejectBtn}
+                      onClick={() => handleReject(p.id)}
+                    >
+                      거절
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Waitlist */}
+      {mate.waitlist && mate.waitlist.length > 0 && (
+        <Card className={styles.participantsCard}>
+          <h3>대기자 ({mate.waitlist.length})</h3>
+          <div className={styles.participantList}>
+            {mate.waitlist.map((w) => (
+              <div key={w.id} className={styles.participant}>
+                <Avatar
+                  src={w.user?.profileImage}
+                  name={w.user?.name}
+                  size="sm"
+                />
+                <span className={styles.participantName}>{w.user?.name}</span>
+                <Badge variant="default" size="sm">
+                  대기중
+                </Badge>
+                {w.user?.id === user?.id && (
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => handleCancelWaitlist(w.id)}
+                  >
+                    취소
+                  </Button>
+                )}
               </div>
             ))}
           </div>
@@ -179,16 +291,31 @@ const WalkingMateDetail = () => {
           <Button variant="outline" fullWidth onClick={handleDelete}>
             삭제하기
           </Button>
-        ) : isAuthenticated && mate.status === "OPEN" && (
-          isParticipant ? (
+        ) : (
+          isAuthenticated &&
+          (isParticipant ? (
             <Button variant="outline" fullWidth onClick={handleLeave}>
               참가 취소
             </Button>
-          ) : (
-            <Button fullWidth onClick={() => setShowJoinModal(true)}>
-              참가 신청
+          ) : isPending ? (
+            <Button variant="outline" fullWidth onClick={handleLeave}>
+              신청 취소
             </Button>
-          )
+          ) : isInWaitlist ? (
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => handleCancelWaitlist(myWaitlist.id)}
+            >
+              대기 취소
+            </Button>
+          ) : (
+            mate.status === "OPEN" && (
+              <Button fullWidth onClick={() => setShowJoinModal(true)}>
+                참가 신청
+              </Button>
+            )
+          ))
         )}
       </div>
 
@@ -213,26 +340,39 @@ const WalkingMateDetail = () => {
                       if (e.target.checked) {
                         setSelectedPets([...selectedPets, pet.id]);
                       } else {
-                        setSelectedPets(selectedPets.filter((i) => i !== pet.id));
+                        setSelectedPets(
+                          selectedPets.filter((i) => i !== pet.id)
+                        );
                       }
                     }}
                   />
                   <span className={styles.petCheckmark}>
                     {selectedPets.includes(pet.id) && "✓"}
                   </span>
-                  <span>{pet.species === "DOG" ? "🐕" : "🐱"} {pet.petName}</span>
+                  <span>
+                    {pet.species === "DOG" ? "🐕" : "🐱"} {pet.petName}
+                  </span>
                 </label>
               ))}
             </div>
           ) : (
             <div className={styles.noPets}>
               <p>등록된 반려동물이 없어요</p>
-              <Button variant="outline" size="sm" onClick={() => navigate("/pets")}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/pets")}
+              >
                 등록하기
               </Button>
             </div>
           )}
-          <Button fullWidth onClick={handleJoin} loading={submitting} disabled={myPets.length === 0}>
+          <Button
+            fullWidth
+            onClick={handleJoin}
+            loading={submitting}
+            disabled={myPets.length === 0}
+          >
             신청하기
           </Button>
         </div>
