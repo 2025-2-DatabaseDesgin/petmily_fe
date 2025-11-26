@@ -15,7 +15,7 @@ import styles from "./Pets.module.css";
 
 const Pets = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [pets, setPets] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -35,12 +35,13 @@ const Pets = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
     fetchPets();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const fetchPets = async () => {
     try {

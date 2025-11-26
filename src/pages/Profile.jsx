@@ -8,18 +8,19 @@ import styles from "./Profile.module.css";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshProfile, logout } = useAuth();
+  const { user, isAuthenticated, loading: authLoading, refreshProfile, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [pets, setPets] = useState([]);
   const [stats, setStats] = useState({ followerCount: 0, followingCount: 0 });
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
     fetchData();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const fetchData = async () => {
     try {
@@ -28,7 +29,7 @@ const Profile = () => {
         petsAPI.getMyPets(),
         user?.id ? followsAPI.getStats(user.id) : Promise.resolve({ data: {} }),
       ]);
-      setPets(petsResponse.data || []);
+      setPets(petsResponse.data?.pets || []);
       setStats(statsResponse.data || { followerCount: 0, followingCount: 0 });
     } catch (err) {
       console.error("프로필 데이터 로딩 실패:", err);
