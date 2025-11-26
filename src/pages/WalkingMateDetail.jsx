@@ -103,7 +103,7 @@ const WalkingMateDetail = () => {
     return labels[size] || size;
   };
 
-  const isHost = user?.id === mate?.hostId || user?.id === mate?.host?.id;
+  const isHost = user?.id === mate?.hostId || user?.id === mate?.hostUser?.id;
   const isParticipant = mate?.participants?.some(
     (p) => p.user?.id === user?.id && p.status === "ACCEPTED"
   );
@@ -139,10 +139,10 @@ const WalkingMateDetail = () => {
       {/* Host Info */}
       <Card className={styles.hostCard}>
         <div className={styles.hostInfo}>
-          <Avatar src={mate.host?.profileImage} name={mate.host?.name} size="lg" />
+          <Avatar src={mate.hostUser?.profileImage} name={mate.hostUser?.name} size="lg" />
           <div>
             <span className={styles.hostLabel}>주최자</span>
-            <span className={styles.hostName}>{mate.host?.name}</span>
+            <span className={styles.hostName}>{mate.hostUser?.name}</span>
           </div>
         </div>
       </Card>

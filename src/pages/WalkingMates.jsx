@@ -161,8 +161,8 @@ const WalkingMates = () => {
                 <p className={styles.mateDescription}>{mate.description}</p>
               )}
               <div className={styles.mateHost}>
-                <Avatar src={mate.host?.profileImage} name={mate.host?.name} size="xs" />
-                <span>{mate.host?.name}</span>
+                <Avatar src={mate.hostUser?.profileImage} name={mate.hostUser?.name} size="xs" />
+                <span>{mate.hostUser?.name}</span>
               </div>
             </Card>
           ))

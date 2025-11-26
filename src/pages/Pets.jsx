@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Button, Card, Badge, Modal, Input, Loading, Avatar } from "../components/common";
+import {
+  Button,
+  Card,
+  Badge,
+  Modal,
+  Input,
+  Loading,
+  Avatar,
+} from "../components/common";
 import petsAPI from "../api/pets";
 import styles from "./Pets.module.css";
 
@@ -37,7 +45,7 @@ const Pets = () => {
   const fetchPets = async () => {
     try {
       const response = await petsAPI.getMyPets();
-      setPets(response.data || []);
+      setPets(response.data?.pets || []);
     } catch (err) {
       console.error("반려동물 목록 로딩 실패:", err);
     } finally {
@@ -54,15 +62,15 @@ const Pets = () => {
     if (pet) {
       setEditingPet(pet);
       setFormData({
-        petName: pet.petName || "",
+        petName: pet.petName,
         species: pet.species || "DOG",
-        breed: pet.breed || "",
-        age: pet.age || "",
-        gender: pet.gender || "",
-        size: pet.size || "",
-        weight: pet.weight || "",
-        personality: pet.personality || "",
-        healthStatus: pet.healthStatus || "",
+        breed: pet.breed,
+        age: pet.age,
+        gender: pet.gender,
+        size: pet.size,
+        weight: pet.weight,
+        personality: pet.personality,
+        healthStatus: pet.healthStatus,
       });
     } else {
       setEditingPet(null);
@@ -93,11 +101,22 @@ const Pets = () => {
     setError("");
 
     try {
-      const data = {
-        ...formData,
-        age: formData.age ? parseInt(formData.age) : undefined,
-        weight: formData.weight ? parseFloat(formData.weight) : undefined,
-      };
+      // 빈 값 제거
+      const data = Object.fromEntries(
+        Object.entries({
+          petName: formData.petName,
+          species: formData.species,
+          breed: formData.breed,
+          age: formData.age ? parseInt(formData.age) : null,
+          gender: formData.gender,
+          size: formData.size,
+          weight: formData.weight ? parseFloat(formData.weight) : null,
+          personality: formData.personality,
+          healthStatus: formData.healthStatus,
+        }).filter(
+          ([, value]) => value !== "" && value !== null && value !== undefined
+        )
+      );
 
       if (editingPet) {
         await petsAPI.update(editingPet.id, data);
@@ -156,11 +175,19 @@ const Pets = () => {
               <div className={styles.petHeader}>
                 <Avatar src={pet.profileImage} name={pet.petName} size="xl" />
                 <div className={styles.petInfo}>
-                  <h3>{getSpeciesEmoji(pet.species)} {pet.petName}</h3>
+                  <h3>
+                    {getSpeciesEmoji(pet.species)} {pet.petName}
+                  </h3>
                   <div className={styles.petBadges}>
-                    <Badge variant="primary" size="sm">{getSpeciesLabel(pet.species)}</Badge>
-                    {pet.size && <Badge size="sm">{getSizeLabel(pet.size)}</Badge>}
-                    {pet.gender && <Badge size="sm">{getGenderLabel(pet.gender)}</Badge>}
+                    <Badge variant="primary" size="sm">
+                      {getSpeciesLabel(pet.species)}
+                    </Badge>
+                    {pet.size && (
+                      <Badge size="sm">{getSizeLabel(pet.size)}</Badge>
+                    )}
+                    {pet.gender && (
+                      <Badge size="sm">{getGenderLabel(pet.gender)}</Badge>
+                    )}
                   </div>
                 </div>
               </div>
@@ -187,10 +214,18 @@ const Pets = () => {
               )}
 
               <div className={styles.petActions}>
-                <Button variant="outline" size="sm" onClick={() => handleOpenModal(pet)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleOpenModal(pet)}
+                >
                   수정
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => handleDelete(pet.id)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDelete(pet.id)}
+                >
                   삭제
                 </Button>
               </div>
@@ -209,7 +244,15 @@ const Pets = () => {
       {/* FAB */}
       {pets.length > 0 && (
         <button className={styles.fab} onClick={() => handleOpenModal()}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
@@ -239,19 +282,34 @@ const Pets = () => {
           <div className={styles.formRow}>
             <div className={styles.selectWrapper}>
               <label>종류</label>
-              <select name="species" value={formData.species} onChange={handleChange}>
+              <select
+                name="species"
+                value={formData.species}
+                onChange={handleChange}
+              >
                 <option value="DOG">강아지</option>
                 <option value="CAT">고양이</option>
                 <option value="OTHER">기타</option>
               </select>
             </div>
-            <Input label="품종" name="breed" value={formData.breed} onChange={handleChange} placeholder="품종" fullWidth />
+            <Input
+              label="품종"
+              name="breed"
+              value={formData.breed}
+              onChange={handleChange}
+              placeholder="품종"
+              fullWidth
+            />
           </div>
 
           <div className={styles.formRow}>
             <div className={styles.selectWrapper}>
               <label>성별</label>
-              <select name="gender" value={formData.gender} onChange={handleChange}>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+              >
                 <option value="">선택안함</option>
                 <option value="MALE">수컷</option>
                 <option value="FEMALE">암컷</option>
@@ -269,11 +327,34 @@ const Pets = () => {
           </div>
 
           <div className={styles.formRow}>
-            <Input type="number" label="나이" name="age" value={formData.age} onChange={handleChange} placeholder="나이" fullWidth />
-            <Input type="number" label="체중 (kg)" name="weight" value={formData.weight} onChange={handleChange} placeholder="체중" fullWidth />
+            <Input
+              type="number"
+              label="나이"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              placeholder="나이"
+              fullWidth
+            />
+            <Input
+              type="number"
+              label="체중 (kg)"
+              name="weight"
+              value={formData.weight}
+              onChange={handleChange}
+              placeholder="체중"
+              fullWidth
+            />
           </div>
 
-          <Input label="성격" name="personality" value={formData.personality} onChange={handleChange} placeholder="성격을 설명해주세요" fullWidth />
+          <Input
+            label="성격"
+            name="personality"
+            value={formData.personality}
+            onChange={handleChange}
+            placeholder="성격을 설명해주세요"
+            fullWidth
+          />
 
           <Button type="submit" fullWidth loading={submitting}>
             {editingPet ? "수정하기" : "등록하기"}
