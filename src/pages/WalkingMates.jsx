@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Button, Card, Badge, Modal, Input, Loading, Avatar } from "../components/common";
 import walkingMatesAPI from "../api/walkingMates";
+import routesAPI from "../api/routes";
 import styles from "./WalkingMates.module.css";
 
 const WalkingMates = () => {
@@ -12,7 +13,10 @@ const WalkingMates = () => {
   const [mates, setMates] = useState([]);
   const [filter, setFilter] = useState("OPEN");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [routes, setRoutes] = useState([]);
+  const [routesLoading, setRoutesLoading] = useState(false);
   const [formData, setFormData] = useState({
+    routeId: "",
     walkingDate: "",
     walkingTime: "",
     location: "",
@@ -41,15 +45,56 @@ const WalkingMates = () => {
     }
   };
 
+  const fetchRoutes = async () => {
+    setRoutesLoading(true);
+    try {
+      const response = await routesAPI.getAll({ limit: 50 });
+      setRoutes(response.data?.routes || []);
+    } catch (err) {
+      console.error("산책로 목록 로딩 실패:", err);
+    } finally {
+      setRoutesLoading(false);
+    }
+  };
+
+  const handleOpenCreateModal = () => {
+    fetchRoutes();
+    setShowCreateModal(true);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // 산책로 선택 시 location 자동 설정
+    if (name === "routeId" && value) {
+      const selectedRoute = routes.find((r) => r.id === value);
+      if (selectedRoute) {
+        setFormData((prev) => ({
+          ...prev,
+          routeId: value,
+          location: selectedRoute.name,
+        }));
+      }
+    }
+  };
+
+  const handleRouteSelect = (route) => {
+    setFormData((prev) => ({
+      ...prev,
+      routeId: route.id,
+      location: route.name,
+    }));
   };
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.walkingDate || !formData.walkingTime || !formData.location) {
-      setError("필수 항목을 입력해주세요");
+    if (!formData.routeId) {
+      setError("산책로를 선택해주세요");
+      return;
+    }
+    if (!formData.walkingDate || !formData.walkingTime) {
+      setError("날짜와 시간을 입력해주세요");
       return;
     }
 
@@ -59,15 +104,17 @@ const WalkingMates = () => {
     try {
       const walkingDate = new Date(`${formData.walkingDate}T${formData.walkingTime}`).toISOString();
       await walkingMatesAPI.create({
+        routeId: formData.routeId,
         walkingDate,
         location: formData.location,
         duration: parseInt(formData.duration),
         maxParticipants: parseInt(formData.maxParticipants),
         petSizeFilter: formData.petSizeFilter,
-        description: formData.description,
+        description: formData.description || undefined,
       });
       setShowCreateModal(false);
       setFormData({
+        routeId: "",
         walkingDate: "",
         walkingTime: "",
         location: "",
@@ -171,7 +218,7 @@ const WalkingMates = () => {
             <span className={styles.emptyIcon}>🐾</span>
             <p>모집 중인 산책이 없어요</p>
             {isAuthenticated && (
-              <Button variant="secondary" size="sm" onClick={() => setShowCreateModal(true)}>
+              <Button variant="secondary" size="sm" onClick={handleOpenCreateModal}>
                 산책 모집하기
               </Button>
             )}
@@ -181,7 +228,7 @@ const WalkingMates = () => {
 
       {/* FAB */}
       {isAuthenticated && (
-        <button className={styles.fab} onClick={() => setShowCreateModal(true)}>
+        <button className={styles.fab} onClick={handleOpenCreateModal}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -199,10 +246,48 @@ const WalkingMates = () => {
         <form onSubmit={handleCreateSubmit} className={styles.form}>
           {error && <div className={styles.error}>{error}</div>}
 
+          {/* 산책로 선택 */}
+          <div className={styles.routeSection}>
+            <label className={styles.routeLabel}>산책로 선택 *</label>
+            {routesLoading ? (
+              <div className={styles.routeLoading}>산책로 불러오는 중...</div>
+            ) : routes.length > 0 ? (
+              <div className={styles.routeList}>
+                {routes.map((route) => (
+                  <div
+                    key={route.id}
+                    className={`${styles.routeItem} ${formData.routeId === route.id ? styles.selected : ""}`}
+                    onClick={() => handleRouteSelect(route)}
+                  >
+                    <div className={styles.routeIcon}>🗺️</div>
+                    <div className={styles.routeInfo}>
+                      <span className={styles.routeName}>{route.name}</span>
+                      <span className={styles.routeMeta}>
+                        {route.distance && `${route.distance}km`}
+                        {route.estimatedTime && ` · ${route.estimatedTime}분`}
+                        {route.region && ` · ${route.region}`}
+                      </span>
+                    </div>
+                    {formData.routeId === route.id && (
+                      <span className={styles.routeCheck}>✓</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.noRoutes}>
+                <p>등록된 산책로가 없어요</p>
+                <Button variant="outline" size="sm" onClick={() => navigate("/routes")}>
+                  산책로 보기
+                </Button>
+              </div>
+            )}
+          </div>
+
           <div className={styles.formRow}>
             <Input
               type="date"
-              label="날짜"
+              label="날짜 *"
               name="walkingDate"
               value={formData.walkingDate}
               onChange={handleChange}
@@ -211,7 +296,7 @@ const WalkingMates = () => {
             />
             <Input
               type="time"
-              label="시간"
+              label="시간 *"
               name="walkingTime"
               value={formData.walkingTime}
               onChange={handleChange}
@@ -219,16 +304,6 @@ const WalkingMates = () => {
               fullWidth
             />
           </div>
-
-          <Input
-            label="장소"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            placeholder="만남 장소"
-            required
-            fullWidth
-          />
 
           <div className={styles.formRow}>
             <div className={styles.selectWrapper}>
@@ -271,7 +346,7 @@ const WalkingMates = () => {
             />
           </div>
 
-          <Button type="submit" fullWidth loading={submitting}>
+          <Button type="submit" fullWidth loading={submitting} disabled={!formData.routeId}>
             모집하기
           </Button>
         </form>
