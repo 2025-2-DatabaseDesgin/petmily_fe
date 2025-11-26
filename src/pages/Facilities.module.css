@@ -1,0 +1,122 @@
+.page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  min-width: 56px;
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--neutral-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: white;
+}
+
+.tabIcon {
+  font-size: 1.125rem;
+}
+
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.facilityCard {
+  padding: var(--space-4);
+}
+
+.facilityHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.facilityIcon {
+  font-size: 1.75rem;
+}
+
+.facilityBadges {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.facilityName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.facilityAddress {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-2);
+}
+
+.facilityInfo {
+  font-size: 0.6875rem;
+  color: var(--neutral-600);
+  margin-bottom: var(--space-1);
+}
+
+.discount {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--primary-50);
+  border-radius: var(--radius-lg);
+  font-size: 0.75rem;
+  color: var(--primary-700);
+  font-weight: 500;
+}
+
+/* Empty */
+.emptyCard {
+  padding: var(--space-8);
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.emptyCard p {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}

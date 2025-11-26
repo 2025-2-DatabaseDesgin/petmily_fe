@@ -1,0 +1,143 @@
+/* Base Button Styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Variants */
+.primary {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: white;
+}
+
+.primary:active:not(:disabled) {
+  background: var(--primary-700);
+}
+
+.secondary {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+}
+
+.secondary:active:not(:disabled) {
+  background: var(--neutral-200);
+}
+
+.outline {
+  background: transparent;
+  border: 2px solid var(--primary-500);
+  color: var(--primary-600);
+}
+
+.outline:active:not(:disabled) {
+  background: var(--primary-50);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--neutral-600);
+}
+
+.ghost:active:not(:disabled) {
+  background: var(--neutral-100);
+}
+
+.danger {
+  background: var(--error);
+  color: white;
+}
+
+.danger:active:not(:disabled) {
+  background: #dc2626;
+}
+
+/* Sizes */
+.sm {
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: 0.8125rem;
+  border-radius: var(--radius-md);
+}
+
+.md {
+  height: 44px;
+  padding: 0 var(--space-4);
+  font-size: 0.9375rem;
+}
+
+.lg {
+  height: 52px;
+  padding: 0 var(--space-5);
+  font-size: 1rem;
+  border-radius: var(--radius-xl);
+}
+
+/* Full Width */
+.fullWidth {
+  width: 100%;
+}
+
+/* Loading State */
+.loading {
+  position: relative;
+  color: transparent;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner svg {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.outline .spinner svg {
+  color: var(--primary-600);
+}
+
+/* Icon */
+.icon {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

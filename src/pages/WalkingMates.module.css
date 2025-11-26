@@ -1,0 +1,214 @@
+.page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: 3px;
+  background: var(--neutral-100);
+  border-radius: var(--radius-full);
+}
+
+.tab {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--neutral-500);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab.active {
+  background: white;
+  color: var(--primary-600);
+  box-shadow: var(--shadow-sm);
+}
+
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.mateCard {
+  padding: var(--space-4);
+  cursor: pointer;
+}
+
+.mateCard:active {
+  background: var(--neutral-50);
+}
+
+.mateHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.mateBadges {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.mateParticipants {
+  font-size: 0.6875rem;
+  color: var(--neutral-500);
+}
+
+.mateLocation {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.mateDateTime {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: 0.6875rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-3);
+}
+
+.mateDescription {
+  font-size: 0.75rem;
+  color: var(--neutral-600);
+  margin-bottom: var(--space-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mateHost {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.6875rem;
+  color: var(--neutral-600);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--neutral-100);
+}
+
+/* Empty */
+.emptyCard {
+  padding: var(--space-8);
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.emptyCard p {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-4);
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: calc(var(--tab-bar-height) + var(--safe-area-bottom) + var(--space-4));
+  right: var(--space-4);
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  border: none;
+  border-radius: var(--radius-full);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4);
+  cursor: pointer;
+  z-index: 50;
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.selectWrapper label,
+.textareaWrapper label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--neutral-700);
+}
+
+.selectWrapper select {
+  padding: var(--space-3);
+  font-size: 1rem;
+  border: 2px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.textareaWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.textareaWrapper textarea {
+  padding: var(--space-3);
+  font-size: 1rem;
+  border: 2px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  resize: none;
+  font-family: var(--font-body);
+}
+
+.error {
+  padding: var(--space-3);
+  background: var(--error-light);
+  color: var(--error);
+  border-radius: var(--radius-lg);
+  font-size: 0.8125rem;
+  text-align: center;
+}

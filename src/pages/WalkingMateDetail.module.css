@@ -1,0 +1,195 @@
+.page {
+  padding: var(--space-4);
+  padding-bottom: calc(var(--space-4) + 70px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+}
+
+/* Header Card */
+.headerCard {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.badges {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.location {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.dateTime {
+  font-size: 0.875rem;
+  color: var(--primary-600);
+  margin-bottom: var(--space-3);
+}
+
+.infoRow {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 0.8125rem;
+  color: var(--neutral-600);
+}
+
+/* Host Card */
+.hostCard {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.hostInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hostInfo > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.hostLabel {
+  font-size: 0.625rem;
+  color: var(--neutral-500);
+}
+
+.hostName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* Description Card */
+.descCard {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.descCard h3 {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-2);
+}
+
+.descCard p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Participants Card */
+.participantsCard {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.participantsCard h3 {
+  font-size: 0.8125rem;
+  margin-bottom: var(--space-3);
+}
+
+.participantList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.participant {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--neutral-50);
+  border-radius: var(--radius-lg);
+}
+
+.participant span:nth-child(2) {
+  flex: 1;
+  font-size: 0.8125rem;
+}
+
+/* Actions */
+.actions {
+  position: fixed;
+  bottom: calc(var(--tab-bar-height) + var(--safe-area-bottom));
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: var(--space-4);
+  background: white;
+  border-top: 1px solid var(--neutral-100);
+}
+
+/* Join Modal */
+.joinModal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.joinText {
+  font-size: 0.8125rem;
+  color: var(--neutral-600);
+}
+
+.petList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.petOption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+.petOption input {
+  display: none;
+}
+
+.petCheckmark {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  color: white;
+}
+
+.petOption input:checked + .petCheckmark {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.noPets {
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.noPets p {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-3);
+}
+
+.error {
+  padding: var(--space-3);
+  background: var(--error-light);
+  color: var(--error);
+  border-radius: var(--radius-lg);
+  font-size: 0.8125rem;
+  text-align: center;
+}

@@ -1,0 +1,222 @@
+.page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  flex: 1;
+}
+
+/* Welcome Section */
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 100%);
+  border-radius: var(--radius-xl);
+  color: white;
+}
+
+.greeting {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: var(--space-1);
+}
+
+.userName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Hero Section */
+.hero {
+  padding: var(--space-5);
+  background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-600) 100%);
+  border-radius: var(--radius-xl);
+  color: white;
+  text-align: center;
+}
+
+.heroContent {
+  margin-bottom: var(--space-5);
+}
+
+.heroPaw {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.hero h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.4;
+  margin-bottom: var(--space-2);
+}
+
+.hero p {
+  font-size: 0.8125rem;
+  opacity: 0.9;
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.heroActions button:first-child {
+  background: white;
+  color: var(--primary-600);
+}
+
+.heroActions button:last-child {
+  border-color: white;
+  color: white;
+}
+
+/* Quick Actions */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.quickAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-1);
+  background: white;
+  border: 1px solid var(--neutral-100);
+  border-radius: var(--radius-lg);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--neutral-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.quickAction:active {
+  transform: scale(0.97);
+  background: var(--neutral-50);
+}
+
+.actionIcon {
+  font-size: 1.25rem;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionHeader h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.viewAll {
+  font-size: 0.6875rem;
+  color: var(--neutral-500);
+}
+
+/* Mate List */
+.mateList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mateCard {
+  padding: var(--space-4);
+  cursor: pointer;
+}
+
+.mateCard:active {
+  background: var(--neutral-50);
+}
+
+.mateContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mateInfo h4 {
+  font-size: 0.875rem;
+  margin: var(--space-2) 0 var(--space-1);
+}
+
+.mateDateTime {
+  font-size: 0.6875rem;
+  color: var(--neutral-500);
+}
+
+.mateParticipants {
+  font-size: 0.6875rem;
+  color: var(--neutral-500);
+}
+
+/* Facility Grid */
+.facilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.facilityCard {
+  padding: var(--space-3);
+  cursor: pointer;
+}
+
+.facilityCard:active {
+  background: var(--neutral-50);
+}
+
+.facilityIcon {
+  font-size: 1.25rem;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.facilityCard h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.discount {
+  font-size: 0.625rem;
+  color: var(--primary-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Empty Card */
+.emptyCard {
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.emptyCard p {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+  margin-bottom: var(--space-3);
+}
